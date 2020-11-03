@@ -49,6 +49,14 @@
     </div>
 
     <div class="form-group">
+        <label for="show_totals-{{ $id }}" class="control-label">@lang('Show Totals')</label>
+        <select class="form-control" name="show_totals" id="show_totals-{{ $id }}">
+            <option value="0" @if($show_totals == 0) selected @endif>@lang('No')</option>
+            <option value="1" @if($show_totals == 1) selected @endif>@lang('Yes')</option>
+        </select>
+    </div>
+
+    <div class="form-group">
         <label for="order_by-{{ $id }}" class="control-label">@lang('Order By')</label>
         <select class="form-control" name="order_by" id="order_by-{{ $id }}">
             <option value="hostname" @if($order_by == 'hostname') selected @endif>@lang('Hostname')</option>
