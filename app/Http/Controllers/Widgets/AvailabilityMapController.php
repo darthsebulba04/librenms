@@ -45,6 +45,7 @@ class AvailabilityMapController extends WidgetController
             'mode_select' => 0,
             'order_by' => Config::get('webui.availability_map_sort_status') ? 'status' : 'hostname',
             'device_group' => null,
+            'show_totals' => true,
         ];
     }
 
