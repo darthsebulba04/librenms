@@ -85,33 +85,34 @@ class ServerStatsController extends WidgetController
             }
 
             if ($data['show_mems']) {
-                $data['mempools'] = $device->mempools()->select(\DB::raw('mempool_descr, mempool_                foreach ($data['mempools'] as $key => $mempool) {
+                $data['mempools'] = $device->mempools()->select(\DB::raw('mempool_descr, mempool_used as used, mempool_total as total'))->get();
+                foreach ($data['mempools'] as $key => $mempool) {
                     if (!preg_match($data['filter_mems'], $mempool['mempool_descr'])) {
                         unset($data['mempools'][$key]);
                         continue;
                     }
 
                     $total = $this->formatBytesLabel($mempool['total']);
-                    $used = $this->formatBytesLabel($mempool['used'], $total['round'], $total['po
+                    $used = $this->formatBytesLabel($mempool['used'], $total['round'], $total['power']);
 
                     $data['mempools'][$key]['used'] = $used['value'];
                     $data['mempools'][$key]['total'] = $total['value'];
                     $data['mempools'][$key]['unit'] = "\n".$total['unit'];
                 }
             }
-
-                                                                                     if ($data['show_disks']) {
-                $data['disks'] = $device->storage()->select(\DB::raw('storage_descr, storage_used
+            
+            if ($data['show_disks']) {
+                $data['disks'] = $device->storage()->select(\DB::raw('storage_descr, storage_used as used, storage_size as total'))->get();
                 foreach ($data['disks'] as $key => $disk) {
                     if (!preg_match($data['filter_disks'], $disk['storage_descr'])) {
                         unset($data['disks'][$key]);
                         continue;
                     }
 
-                    $data['disks'][$key]['storage_descr'] = $this->formatDiskLabel($disk['storage
+                    $data['disks'][$key]['storage_descr'] = $this->formatDiskLabel($disk['storage_descr']);
 
                     $total = $this->formatBytesLabel($disk['total']);
-                    $used = $this->formatBytesLabel($disk['used'], $total['round'], $total['power
+                    $used = $this->formatBytesLabel($disk['used'], $total['round'], $total['power']);
 
                     $data['disks'][$key]['used'] = $used['value'];
                     $data['disks'][$key]['total'] = $total['value'];
@@ -120,7 +121,7 @@ class ServerStatsController extends WidgetController
             }
 
             if ($data['show_fans']) {
-                $data['fans'] = $device->sensors()->select(\DB::raw('sensor_descr as descr, senso
+                $data['fans'] = $device->sensors()->select(\DB::raw('sensor_descr as descr, sensor_current as current, sensor_limit as high, sensor_limit_low as low'))->where('sensor_class', '=', 'fanspeed')->get();
                 foreach ($data['fans'] as $key => $fan) {
                     if (!preg_match($data['filter_fans'], $fan['descr'])) {
                         unset($data['fans'][$key]);
@@ -136,7 +137,7 @@ class ServerStatsController extends WidgetController
             }
 
             if ($data['show_temps']) {
-                $data['temps'] = $device->sensors()->select(\DB::raw('sensor_descr as descr, sens
+                $data['temps'] = $device->sensors()->select(\DB::raw('sensor_descr as descr, sensor_current as current, sensor_limit as high, sensor_limit_low as low'))->where('sensor_class', '=', 'temperature')->get();
                 foreach ($data['temps'] as $key => $temp) {
                     if (!preg_match($data['filter_temps'], $temp['descr'])) {
                         unset($data['temps'][$key]);
@@ -149,7 +150,7 @@ class ServerStatsController extends WidgetController
             }
 
             if ($data['show_voltages']) {
-                $data['voltages'] = $device->sensors()->select(\DB::raw('sensor_descr as descr, s
+                $data['voltages'] = $device->sensors()->select(\DB::raw('sensor_descr as descr, sensor_current as current, sensor_limit as high, sensor_limit_low as low'))->where('sensor_class', '=', 'voltage')->get();
                 foreach ($data['voltages'] as $key => $temp) {
                     if (!preg_match($data['filter_voltages'], $temp['descr'])) {
                         unset($data['voltages'][$key]);
