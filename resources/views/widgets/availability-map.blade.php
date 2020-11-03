@@ -1,4 +1,5 @@
 @if($device_totals)
+@if($show_totals)
 <div class="widget-availability-host">
     <span>@lang('Total hosts')</span>
     @if($show_disabled_and_ignored)
@@ -21,6 +22,7 @@
     <span class="label label-warning label-font-border label-border">@lang('warn'): {{ $services_totals['warn'] }}</span>
     <span class="label label-danger label-font-border label-border">@lang('down'): {{ $services_totals['down'] }}</span>
 </div>
+@endif
 @endif
 
 <br style="clear:both;">
