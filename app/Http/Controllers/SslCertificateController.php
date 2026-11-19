@@ -98,9 +98,18 @@ class SslCertificateController extends Controller
 
         $request->validate([
             'disabled' => 'sometimes|boolean',
+            'force_refresh' => 'sometimes|boolean',
         ]);
 
-        if ($request->has('disabled')) {
+        if ($request->has('force_refresh')) {
+            try {
+                $ssl_certificate->updateFromHost();
+                $ssl_certificate->save();
+            } catch (\Throwable $e) {
+                return redirect()->route('ssl-certificates.update')
+                    ->withErrors(['host' => __('Failed to fetch certificate: :error', ['error' => $e->getMessage()])]);
+            }
+        } else if ($request->has('disabled')) {
             $ssl_certificate->disabled = $request->boolean('disabled');
             $ssl_certificate->save();
         }
