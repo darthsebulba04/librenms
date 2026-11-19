@@ -73,6 +73,21 @@ function sslCertEnable(id) {
     });
 }
 
+function sslCertRefresh(id) {
+    var url = route('ssl-certificates.update', {ssl_certificate: id});
+    $.ajax({
+        method: 'PUT',
+        url: url,
+        headers: { 'Accept': 'application/json' },
+        data: { force_refresh: 1 }
+    }).done(function () {
+        $("#ssl-certificates").bootgrid('reload');
+        toastr.success("{{ __('Certificate refreshed') }}");
+    }).fail(function (xhr) {
+        toastr.error(xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : "{{ __('Failed to refresh certificate') }}");
+    });
+}
+
 function sslCertDelete(id) {
     if (!confirm("{{ __('Delete this certificate?') }}")) {
         return;
@@ -103,6 +118,7 @@ $(document).ready(function () {
                 if (row.disabled) {
                     html += '<button type="button" class="btn btn-xs btn-success" onclick="sslCertEnable(' + row.id + ')"><i class="fa fa-play fa-fw"></i> {{ __('Enable') }}</button> ';
                 } else {
+                    html += '<button type="button" class="btn btn-xs btn-info" onclick="sslCertRefresh(' + row.id + ')"><i class="fa fa-refresh fa-fw"></i> {{ __('Refresh') }}</button> ';
                     html += '<button type="button" class="btn btn-xs btn-warning" onclick="sslCertPause(' + row.id + ')"><i class="fa fa-pause fa-fw"></i> {{ __('Pause') }}</button> ';
                 }
                 @endcan
