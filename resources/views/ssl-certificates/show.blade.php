@@ -180,6 +180,12 @@
                                 <input type="hidden" name="disabled" value="1">
                                 <button type="submit" class="btn btn-warning">{{ __('Pause') }}</button>
                             </form>
+                            <form action="{{ route('ssl-certificates.update', $certificate) }}" method="POST" style="display:inline">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="force_refresh" value="1">
+                                <button type="submit" class="btn btn-info">{{ __('Refresh') }}</button>
+                            </form>
                         @endif
                         @endcan
                         @can('delete', $certificate)
